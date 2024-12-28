@@ -36,17 +36,23 @@ const client = new Client({
     }
 });
 
-
+let latestQR = '';
+// QR event handler
 client.on('qr', (qr) => {
-    console.log('Scan the QR code to log in.');
-    QRCode.toString(qr, { type: 'terminal' }, (err, qrCode) => {
-        if (err) throw err;
-        console.log(qrCode);
+    console.log('QR RECEIVED, visit /qr to scan it with WhatsApp.');
+    QRCode.toDataURL(qr, (err, url) => {
+        if (err) {
+            console.error('Failed to generate QR code', err);
+            return;
+        }
+        latestQR = url;
     });
 });
 
+// Ready event handler
 client.on('ready', () => {
     console.log('WhatsApp client is ready!');
+    latestQR = ''; // Clear QR code once ready
 });
 
 client.initialize();
@@ -167,6 +173,52 @@ app.get('/send-otp', async (req, res) => {
         res.json({ success: true, message: 'OTP sent successfully!', otp });
     } catch (err) {
         res.status(500).json({ error: 'Failed to send OTP', details: err.message });
+    }
+});
+
+app.get('/qr', (req, res) => {
+    if (latestQR) {
+        res.send(`
+            <html>
+                <head>
+                    <title>WhatsApp QR Code</title>
+                    <style>
+                        body {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                            background-color: #f0f0f0;
+                            font-family: Arial, sans-serif;
+                        }
+                        img {
+                            width: 300px;
+                            height: 300px;
+                        }
+                        p {
+                            margin-top: 20px;
+                            font-size: 18px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <img src="${latestQR}" alt="QR Code" />
+                    <p>Scan this QR code with your WhatsApp to log in.</p>
+                </body>
+            </html>
+        `);
+    } else {
+        res.send(`
+            <html>
+                <head>
+                    <title>WhatsApp QR Code</title>
+                </head>
+                <body style="display:flex; justify-content:center; align-items:center; height:100vh;">
+                    <p>QR Code not available or already scanned.</p>
+                </body>
+            </html>
+        `);
     }
 });
 
