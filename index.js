@@ -12,6 +12,7 @@ if (!fs.existsSync(OTP_FILE)) {
     fs.writeFileSync(OTP_FILE, JSON.stringify([]));
 }
 
+
 // WhatsApp client setup with Puppeteer args to disable sandbox
 const client = new Client({
     authStrategy: new LocalAuth({ dataPath: './data/.wa-data' }),
