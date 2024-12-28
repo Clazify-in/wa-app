@@ -26,7 +26,6 @@ const client = new Client({
             '--disable-gpu',
             '--no-first-run',
             '--no-zygote',
-            '--single-process', // <- this one doesn't work in Windows
             '--disable-software-rasterizer',
             '--no-default-browser-check',
             '--no-pings',
