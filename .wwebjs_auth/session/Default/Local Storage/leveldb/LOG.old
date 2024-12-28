@@ -1,5 +1,0 @@
-2024/12/28-07:14:07.247 44ec Reusing MANIFEST /workspaces/wa-app/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
-2024/12/28-07:14:07.247 44ec Recovering log #3
-2024/12/28-07:14:07.247 44ec Level-0 table #3: started
-2024/12/28-07:14:07.256 44ec Level-0 table #3: 14845 bytes OK
-2024/12/28-07:14:07.259 44ec Delete type=0 #3

@@ -12,10 +12,29 @@ if (!fs.existsSync(OTP_FILE)) {
     fs.writeFileSync(OTP_FILE, JSON.stringify([]));
 }
 
-// WhatsApp client setup
+// WhatsApp client setup with Puppeteer args to disable sandbox
 const client = new Client({
-    authStrategy: new LocalAuth(),
+    authStrategy: new LocalAuth({ dataPath: './data/.wa-data' }),
+    puppeteer: {
+        headless: true,
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage', // Optional: Useful in limited memory environments
+            '--disable-extensions',
+            '--disable-gpu',
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process', // <- this one doesn't work in Windows
+            '--disable-software-rasterizer',
+            '--no-default-browser-check',
+            '--no-pings',
+            '--disable-background-networking',
+            '--safebrowsing-disable-auto-update'
+        ]
+    }
 });
+
 
 client.on('qr', (qr) => {
     console.log('Scan the QR code to log in.');
